@@ -76,3 +76,18 @@ A criterion without evidence is not met.
 ## Agents and Loop
 
 Loop Engineering is installed at L1, report-only and unscheduled: see [LOOP.md](LOOP.md), [loop-constraints.md](loop-constraints.md) and [loop-budget.md](loop-budget.md). The role files in `.claude/agents/` come from Agency Agents at a pinned revision; provenance and local changes are in [.claude/agency-agents/README.md](.claude/agency-agents/README.md). Reviewer and gate roles are read-only (`tools: Read, Grep, Glob`).
+
+## Ticket implementation: agent roles run automatically
+
+When asked to implement, continue or finish a GitHub issue, follow the playbook in [`.claude/skills/implement-ticket/SKILL.md`](.claude/skills/implement-ticket/SKILL.md). Claude Code loads it on its own for ticket work; `/implement-ticket <issue number>` starts it by hand.
+
+Delegate to the project subagents in `.claude/agents/` without waiting to be asked:
+
+- **Before coding:** Software Architect, as their descriptions say.
+- **While coding:** the implementing role that matches the files being changed.
+- **After coding:** each specialist reviewer whose trigger matches the change.
+- **On every ticket, before it is called done:** Code Reviewer, then Reality Checker.
+- The session that wrote a change does not count as its reviewer.
+- List the roles that ran and their verdicts in the pull request description under "Agent roles run".
+
+Each role's `description` ends with a "Use proactively ..." sentence, which is what makes Claude Code delegate to it without being told.
