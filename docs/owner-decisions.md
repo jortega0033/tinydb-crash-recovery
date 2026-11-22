@@ -34,4 +34,4 @@ Entry 11 (Rust verified in CI only) does not apply: this repository has no Rust.
 | D8 | Filesystem support | Open-time probe of lock, same-directory atomic replace and directory sync; no filesystem-type allowlist; the harness records the filesystem type | #4 |
 | D9 | Scan timings | Not measured in this batch; recorded as future work | #7 |
 
-The equality index ticket (plan ID E89-7) is created by the ticket-writing stage; its issue number is not known when this file is written and is added after the issue exists.
+The equality index ticket (plan ID E89-7) is issue #8.
