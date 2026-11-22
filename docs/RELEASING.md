@@ -8,7 +8,7 @@ There is no package on PyPI and no deployment. A release is a Git tag on `main` 
 
 ## Steps
 
-1. Confirm every ticket of the release is merged and CI is green on `main` (Linux and Windows, Python 3.12).
+1. Confirm every ticket of the release is merged and CI is green on `main` (Linux and Windows, Python 3.12 and 3.13).
 2. From a clean checkout of `main` on Linux, run `python -m unittest discover -s tests -t .` and `python -m pytest third_party/tinydb/tests` and record the tail of each output.
 3. Run the documented demo once: `python -m tinydb_journal scenario run <empty directory>`, then `scenario show <directory>`. (Both commands are planned; ticket #2 makes them real.)
 4. Check that `docs/verification.md` records the clean-directory run for the release candidate (ticket #7).

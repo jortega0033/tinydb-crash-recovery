@@ -2,7 +2,7 @@
 
 TinyDB Crash Recovery is an opt-in journal mode for TinyDB: multi-document batches that survive a process stop, with checkpoint rotation, an explicit legacy import, an equality index and a subprocess fault harness. A developer demonstrates it with one scenario: move counts between two bins, record a movement row in a second table, interrupt the writer, reopen in a fresh process and read back the same complete state.
 
-**Status: planning only.** The repository holds the product plan, the technical specification and the backlog. There is no application code and no test yet. CI is installed and runs the review gate self-test now; its test steps are guarded and switch on when ticket [#2](https://github.com/jortega0033/tinydb-crash-recovery/issues/2) adds the tests. Every command below is planned and does not run until the named ticket lands. Do not claim a check passed that was never run.
+**Status: planning only.** The repository holds the product plan, the technical specification and the backlog. There is no application code and no test yet. CI is installed and runs the review gate self-test now; its test steps are guarded and the guards are removed by the owner or orchestrator, not by a ticket, after ticket [#2](https://github.com/jortega0033/tinydb-crash-recovery/issues/2) has merged. Every command below is planned and does not run until the named ticket lands. Do not claim a check passed that was never run.
 
 ## Source of truth
 
@@ -40,17 +40,18 @@ Invariants every change must keep (from the spec): validation failures leave the
 
 ## Commands
 
-Local Python is `python` (3.13 on the owner's PC; `python3` on Linux). The fault and lock tests only run on Linux, so Linux CI is the verification for them.
+Local Python is `python` (3.13 on the owner's PC; `python3` on Linux). The fault and lock tests only run on Linux, so Linux CI is the verification for them. Every CLI command is therefore exercised by a Linux-only `unittest` case that runs it as a subprocess (`sys.executable -m tinydb_journal ...`) in a temporary directory and checks output, exit code and `hashlib` SHA-256 values; do not rely on `/tmp` paths or `sha256sum`. A hand run on a Linux host is an owner check, listed in the pull request.
 
 | Purpose | Command | Status |
 |---|---|---|
 | Setup | `python -m venv .venv`, then install the pinned dev requirement file | planned: introduced by ticket #2 (only for the upstream suite runner) |
 | Own tests | `python -m unittest discover -s tests -t .` | planned: introduced by ticket #2 |
-| Upstream suite | `python -m pytest third_party/tinydb/tests` | planned: introduced by ticket #2 (runner choice is an open decision) |
+| Upstream suite | `python -m pytest third_party/tinydb/tests` | planned: introduced by ticket #2 (pytest, dev-only, pinned in `requirements-dev.txt`; decision D1 in `docs/owner-decisions.md`) |
 | Demo scenario | `python -m tinydb_journal scenario run <directory>`, then `scenario show <directory>` | planned: introduced by ticket #2 |
 | Legacy import | `python -m tinydb_journal import <legacy.json> <new-directory>` | planned: introduced by ticket #5 |
 | Fault harness | `python -m tinydb_journal.harness run --seed <n> --out <directory>` | planned: introduced by ticket #6 |
 | Report | `python -m tinydb_journal report <trials-directory>` | planned: introduced by ticket #7 |
+| Journal report | `python -m tinydb_journal report journal <directory> [--generation N]` (takes the directory lock, reads, releases; busy error while another process owns it) | planned: introduced by ticket #7 |
 
 The ticket that introduces a command makes it real and replaces "planned" here in the same pull request.
 
@@ -96,7 +97,7 @@ Each role's `description` ends with a "Use proactively ..." sentence, which is w
 - **Driver and playbook.** The owner starts a ticket with `/next-ticket` ([`.claude/skills/next-ticket/SKILL.md`](.claude/skills/next-ticket/SKILL.md)); it runs the playbook [`.claude/skills/implement-ticket/SKILL.md`](.claude/skills/implement-ticket/SKILL.md). Starting it is the go signal; there is no scheduler. Agents take a ticket up to a ready pull request and never merge or release. A ticket with open sub-issues or the label `tracking` is a container and is never picked.
 - **Review gate hook.** [`.claude/hooks/role_gate.py`](.claude/hooks/role_gate.py), wired in [`.claude/settings.json`](.claude/settings.json), blocks `gh pr create` and `gh pr ready` until Code Reviewer and Reality Checker have run after the last code edit; documentation-only changes pass. `ROLE_GATE=off` in the environment Claude Code is started from switches it off for that session.
 - **Permissions.** `.claude/settings.json` allows the documented commands and git and gh read operations, asks before edits to CI, agent configuration, skills, hooks and Loop files, and denies force pushes, pushes to `main`, `gh pr merge`, releases and reads of `.env`.
-- **CI.** [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs the gate self-test, the own tests and the upstream suite on Linux and Windows with Python 3.12; the test steps are guarded until ticket #2 lands and that ticket removes the guards. Every job must be green before a pull request is marked ready.
+- **CI.** [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs the own tests, the upstream suite and then the gate self-test on Linux and Windows with Python 3.12 and 3.13; the test steps are guarded until ticket #2 has merged, and the owner or orchestrator removes the guards afterwards (a ticket never edits CI). Every job must be green before a pull request is marked ready.
 - **Pull request.** Use [`.github/pull_request_template.md`](.github/pull_request_template.md). Add a line to [`CHANGELOG.md`](CHANGELOG.md) under `Unreleased` in every ticket pull request.
 - **Labels.** `status:ready`, `status:blocked`, `status:in-progress`, `needs-decision`, `tracking`.
 - **UI and copy.** [`docs/ui-quality.md`](docs/ui-quality.md) holds the ten binding rules for any screen and for user-facing text; the product has a CLI only today. A ticket that adds a screen starts with the `ui-ux-pro-max` skill and ends with a check against that file. User-facing copy, documentation and pull request text go through the `unslop` skill before the pull request is opened.

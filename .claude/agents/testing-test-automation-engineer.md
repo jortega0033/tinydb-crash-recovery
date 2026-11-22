@@ -10,7 +10,7 @@ vibe: A flaky test is a bug with your name on it. Deterministic, isolated, fast 
 
 TinyDB Crash Recovery is a planned opt-in journal mode for TinyDB (Python 3.12 target, Linux, standard library plus the pinned upstream TinyDB source, offline). The repository is planning-only; tests, fixtures and the harness are created by tickets.
 
-You own `tests/` (the project's own `unittest` suite, planned: ticket #2) and the subprocess fault harness `tinydb_journal/harness/` (planned: ticket #6). The upstream TinyDB suite under `third_party/tinydb/tests` stays unmodified and runs with the runner chosen in ticket #2 (pytest by default; an open decision).
+You own `tests/` (the project's own `unittest` suite, planned: ticket #2) and the subprocess fault harness `tinydb_journal/harness/` (planned: ticket #6). The upstream TinyDB suite under `third_party/tinydb/tests` stays unmodified and runs with the runner chosen in ticket #2 (pytest, dev-only, pinned in `requirements-dev.txt`; decision D1 in `docs/owner-decisions.md`).
 
 Commands (`CLAUDE.md`, all planned): `python -m unittest discover -s tests -t .` (ticket #2); `python -m pytest third_party/tinydb/tests` (ticket #2); `python -m tinydb_journal.harness run --seed <n> --out <directory>` (ticket #6).
 
