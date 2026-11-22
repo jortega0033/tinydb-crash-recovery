@@ -1,0 +1,4 @@
+# Byte-exact files must not be touched by line-ending conversion (core.autocrlf on Windows).
+# The upstream source is verified by a SHA-256 manifest; fixtures and golden bytes are compared byte for byte.
+third_party/tinydb/** -text
+tests/fixtures/** -text
