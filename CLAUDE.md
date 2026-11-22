@@ -2,7 +2,7 @@
 
 TinyDB Crash Recovery is an opt-in journal mode for TinyDB: multi-document batches that survive a process stop, with checkpoint rotation, an explicit legacy import, an equality index and a subprocess fault harness. A developer demonstrates it with one scenario: move counts between two bins, record a movement row in a second table, interrupt the writer, reopen in a fresh process and read back the same complete state.
 
-**Status: planning only.** The repository holds the product plan, the technical specification and the backlog. There is no application code, no test and no CI yet. Every command below is planned and does not run until the named ticket lands. Do not claim a check passed that was never run.
+**Status: planning only.** The repository holds the product plan, the technical specification and the backlog. There is no application code and no test yet. CI is installed and runs the review gate self-test now; its test steps are guarded and switch on when ticket [#2](https://github.com/jortega0033/tinydb-crash-recovery/issues/2) adds the tests. Every command below is planned and does not run until the named ticket lands. Do not claim a check passed that was never run.
 
 ## Source of truth
 
@@ -69,7 +69,8 @@ Quote, in the pull request, each command that was run and its actual result. For
 2. The own test suite and, once ticket #2 has landed, the upstream TinyDB suite, both passing.
 3. For any on-disk, recovery or ordering change: a test that fails without the change, run for the interruption case it covers, and the effect on file length and generation.
 4. For behaviour that only runs on Linux: say where it ran (CI job or Linux host) and link the run. A Windows-only local pass proves nothing for it.
-5. A statement of what was not verified.
+5. CI green on the draft pull request, with the run link. Order of the gates: local checks pass and their output is recorded; Code Reviewer, then Reality Checker, on the diff and that evidence (Reality Checker checks that the documented checks ran locally and that CI is configured to run them, and does not need a CI result); only then `gh pr create --draft`; CI runs on the draft; when it is green, `gh pr ready` and a comment on the issue with the CI run link.
+6. A statement of what was not verified.
 
 A criterion without evidence is not met.
 
@@ -89,3 +90,16 @@ When asked to implement, continue or finish a GitHub issue, follow the playbook 
 - List the roles that ran and their verdicts in the pull request description under "Agent roles run".
 
 Each role's `description` ends with a "Use proactively ..." sentence, which is what makes Claude Code delegate to it without being told.
+
+## Delivery workflow
+
+- **Driver and playbook.** The owner starts a ticket with `/next-ticket` ([`.claude/skills/next-ticket/SKILL.md`](.claude/skills/next-ticket/SKILL.md)); it runs the playbook [`.claude/skills/implement-ticket/SKILL.md`](.claude/skills/implement-ticket/SKILL.md). Starting it is the go signal; there is no scheduler. Agents take a ticket up to a ready pull request and never merge or release. A ticket with open sub-issues or the label `tracking` is a container and is never picked.
+- **Review gate hook.** [`.claude/hooks/role_gate.py`](.claude/hooks/role_gate.py), wired in [`.claude/settings.json`](.claude/settings.json), blocks `gh pr create` and `gh pr ready` until Code Reviewer and Reality Checker have run after the last code edit; documentation-only changes pass. `ROLE_GATE=off` in the environment Claude Code is started from switches it off for that session.
+- **Permissions.** `.claude/settings.json` allows the documented commands and git and gh read operations, asks before edits to CI, agent configuration, skills, hooks and Loop files, and denies force pushes, pushes to `main`, `gh pr merge`, releases and reads of `.env`.
+- **CI.** [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs the gate self-test, the own tests and the upstream suite on Linux and Windows with Python 3.12; the test steps are guarded until ticket #2 lands and that ticket removes the guards. Every job must be green before a pull request is marked ready.
+- **Pull request.** Use [`.github/pull_request_template.md`](.github/pull_request_template.md). Add a line to [`CHANGELOG.md`](CHANGELOG.md) under `Unreleased` in every ticket pull request.
+- **Labels.** `status:ready`, `status:blocked`, `status:in-progress`, `needs-decision`, `tracking`.
+- **UI and copy.** [`docs/ui-quality.md`](docs/ui-quality.md) holds the ten binding rules for any screen and for user-facing text; the product has a CLI only today. A ticket that adds a screen starts with the `ui-ux-pro-max` skill and ends with a check against that file. User-facing copy, documentation and pull request text go through the `unslop` skill before the pull request is opened.
+- **Decisions.** [`docs/owner-decisions.md`](docs/owner-decisions.md) records what the owner decided and where it is implemented. A decision that blocks a ticket stops the ticket.
+- **Releases and security.** [`docs/RELEASING.md`](docs/RELEASING.md), [`SECURITY.md`](SECURITY.md).
+- **Only the owner merges and releases.**

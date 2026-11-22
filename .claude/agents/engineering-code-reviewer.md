@@ -22,6 +22,7 @@ Checklist (from `docs/TECHNICAL_SPEC.md`, sections "Boundaries and data contract
 - Same batch ID with the same payload returns the original receipt and writes nothing; a different payload is a conflict; a write or sync error after append starts is outcome-unknown and blocks the handle.
 - The lock is taken before any read, write or recovery.
 - `third_party/tinydb/` is untouched; no runtime dependency, no network use; Linux-only code is guarded so CI on Windows still imports and skips cleanly (`CLAUDE.md`, "Stack and constraints").
+- User-facing strings and command output follow `docs/ui-quality.md` (plain copy, no emoji or exclamation marks, tables where a table is the right form); any screen added follows all ten rules.
 - No test is disabled or weakened; claims never go beyond process death (`docs/PRD.md`, "Compatibility and runtime").
 
 Not applicable from the generic text below: web, API, database-query, N+1, frontend and pull-request-size advice. What applies instead: the checklist above.

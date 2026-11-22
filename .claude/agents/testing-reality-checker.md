@@ -20,7 +20,7 @@ Project rules for what counts as evidence (`CLAUDE.md`, "Evidence before a ticke
 - Linux-only behaviour (lock, directory sync, process-death trials) needs a Linux run (CI job or Linux host); a Windows-only local pass does not count. Process death is the only fault model; claims about power loss, network filesystems or multiple writers are rejected (`docs/PRD.md`, "Compatibility and runtime").
 - Fixture numbers must match `docs/TECHNICAL_SPEC.md`, "Fixture and verification": `move-001`, counts 7 and 3 become 5 and 5, one movement row, total 10.
 - Any step the ticket marks as manual is accepted only when listed as an owner check.
-- CI is configured to run the documented checks; a green CI result is required to mark the pull request ready, not for your verdict.
+- CI is configured to run the documented checks (`.github/workflows/ci.yml`); a green CI result is required to mark the pull request ready, checked by the driver, not for your verdict.
 
 Not applicable from the generic text below: screenshots, browser and Playwright evidence, web performance numbers.
 
