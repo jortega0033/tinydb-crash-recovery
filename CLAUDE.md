@@ -47,7 +47,7 @@ Local Python is `python` (3.13 on the owner's PC; `python3` on Linux). The fault
 | Setup | `python -m venv .venv`, then install the pinned dev requirement file | planned: introduced by ticket #2 (only for the upstream suite runner) |
 | Own tests | `python -m unittest discover -s tests -t .` | planned: introduced by ticket #2 |
 | Upstream suite | `python -m pytest third_party/tinydb/tests` | planned: introduced by ticket #2 (runner choice is an open decision) |
-| Demo scenario | `python -m tinydb_journal scenario <directory>` | planned: introduced by ticket #2 |
+| Demo scenario | `python -m tinydb_journal scenario run <directory>`, then `scenario show <directory>` | planned: introduced by ticket #2 |
 | Legacy import | `python -m tinydb_journal import <legacy.json> <new-directory>` | planned: introduced by ticket #5 |
 | Fault harness | `python -m tinydb_journal.harness run --seed <n> --out <directory>` | planned: introduced by ticket #6 |
 | Report | `python -m tinydb_journal report <trials-directory>` | planned: introduced by ticket #7 |
