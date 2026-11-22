@@ -23,7 +23,7 @@ The project subagents in `.claude/agents/` are part of the work. Delegate to the
 9. **Acceptance gate, always.** Run Reality Checker with the ticket's acceptance criteria and the recorded local evidence. It checks that the documented checks ran locally and passed and that CI is configured to run them; it does not need a CI result. Do not call the ticket done unless it passes.
 10. **Draft pull request.** Run user-facing copy, documentation and the pull request text through the `unslop` skill. Capture the evidence `CLAUDE.md` asks for and open a draft pull request that names the issue (`Closes #n`; for the last open sub-issue of a parent also `Closes #<parent>`) with `gh pr create --draft`. Add a line to `CHANGELOG.md`.
 11. **CI.** CI runs on the draft. If it fails, fix, re-run the local checks and both gates, push. Do not poll: end the turn with "Draft pull request #N is waiting for CI" and read `gh pr checks <n>` once when woken.
-12. **Ready.** When CI is green, `gh pr ready <n>` (the gate hook checks again) and comment on the issue with the CI run link. A criterion that needs a person is done as far as an agent can and listed under "Owner checks" in the pull request. Do not merge: only the owner merges.
+12. **Ready.** When CI is green, `gh pr ready <n>` (the gate hook checks again) and comment on the issue with the CI run link. A step the ticket marks as manual is done as far as an agent can and listed under "Owner checks" in the pull request. Do not merge: only the owner merges.
 
 ## Roles
 
