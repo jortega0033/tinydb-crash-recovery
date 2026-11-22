@@ -73,19 +73,17 @@ Quote, in the pull request, each command that was run and its actual result. For
 
 A criterion without evidence is not met.
 
-## Agents and Loop
+## Agent roles and Loop
 
-Loop Engineering is installed at L1, report-only and unscheduled: see [LOOP.md](LOOP.md), [loop-constraints.md](loop-constraints.md) and [loop-budget.md](loop-budget.md). The role files in `.claude/agents/` come from Agency Agents at a pinned revision; provenance and local changes are in [.claude/agency-agents/README.md](.claude/agency-agents/README.md). Reviewer and gate roles are read-only (`tools: Read, Grep, Glob`).
+Loop Engineering is installed at L1, report-only and unscheduled: see [LOOP.md](LOOP.md), [loop-constraints.md](loop-constraints.md) and [loop-budget.md](loop-budget.md).
 
-## Ticket implementation: agent roles run automatically
+The project subagents live in `.claude/agents/` and come from Agency Agents at a pinned revision; provenance and local changes are in [.claude/agency-agents/README.md](.claude/agency-agents/README.md). Each role file starts with an "In this repository" section written for this project; it and this file override the generic upstream text below it. Reviewer and gate roles are read-only (`tools: Read, Grep, Glob`), so the caller gives them the diff and the recorded command output.
 
-When asked to implement, continue or finish a GitHub issue, follow the playbook in [`.claude/skills/implement-ticket/SKILL.md`](.claude/skills/implement-ticket/SKILL.md). Claude Code loads it on its own for ticket work; `/implement-ticket <issue number>` starts it by hand.
+When asked to implement, continue or finish a GitHub issue, follow the playbook [.claude/skills/implement-ticket/SKILL.md](.claude/skills/implement-ticket/SKILL.md). Claude Code loads it on its own for ticket work; `/implement-ticket <issue number>` starts it by hand. Delegate to the roles without waiting to be asked:
 
-Delegate to the project subagents in `.claude/agents/` without waiting to be asked:
-
-- **Before coding:** Software Architect, as their descriptions say.
-- **While coding:** the implementing role that matches the files being changed.
-- **After coding:** each specialist reviewer whose trigger matches the change.
+- **Before coding:** Software Architect, for a ticket that changes a module boundary, the on-disk format or the data contract.
+- **While coding:** the implementing role that matches the files: Database Reliability Engineer for journal, recovery and checkpoint code, Test Automation Engineer for tests and the fault harness, Technical Writer for documentation.
+- **After coding:** Application Security Engineer when the change parses untrusted bytes (frames, checkpoints, legacy import).
 - **On every ticket, before it is called done:** Code Reviewer, then Reality Checker.
 - The session that wrote a change does not count as its reviewer.
 - List the roles that ran and their verdicts in the pull request description under "Agent roles run".

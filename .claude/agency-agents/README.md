@@ -63,6 +63,13 @@ Fetch the same paths at a newer revision, re-apply the `tools:` line to the four
 
 One sentence beginning "Use proactively" was appended to the `description:` line of every Agency Agents role in `.claude/agents/` (not to `loop-verifier`). Claude Code uses that field to decide when to delegate, so the roles now run during ticket work without being named. Nothing else in the role files changed.
 
-This supersedes any statement above that a role file is unmodified or that the `tools:` line is the only local change. To compare a role with the pinned upstream file, remove that sentence (and the `tools:` line where one was added) first.
+A section headed "In this repository" was then inserted directly after the frontmatter of every Agency Agents role (not into `loop-verifier`), before the upstream text. It is project-specific text written for this repository, not upstream text: the planned stack and hard rules that bind the role, the planned files and commands it uses, a checklist of this project's rules with their sources, the parts of the generic text that do not apply here, and what the role hands back. It ends with the sentence "This section and CLAUDE.md override the generic text below wherever they differ." The repository has no code yet, so the sections describe the planned stack, modules and commands from the technical specification and say they are planned; they must be re-checked against the code as tickets land. The upstream text below the section and the rest of the frontmatter are unchanged.
+
+This supersedes any statement above that a role file is unmodified or that the `tools:` line is the only local change. To compare a role with the pinned upstream file, first remove the "Use proactively" sentence (and, where the upstream description has no final punctuation, the full stop that was added in front of it), the section "In this repository" together with the blank line after it, and the `tools:` line where one was added.
 
 The steps at which each role runs are in `.claude/skills/implement-ticket/SKILL.md`.
+
+## Verification
+
+- 2026-11-22: with the three local additions removed (the "Use proactively" sentence, the section "In this repository" with one blank line, and the `tools:` line), all seven Agency Agents files match the upstream SHA-256 values in the table. In Reality Checker the full stop in front of the sentence was removed as well; the other six upstream descriptions already end in a full stop.
+- 2026-11-22: the loading check with `claude -p` was not run during this preparation pass (skipped on purpose to spare memory on a shared machine). The roles are therefore installed but their loading in Claude Code is not yet confirmed. Run the command under "Check that the roles load" in a new session to confirm.
