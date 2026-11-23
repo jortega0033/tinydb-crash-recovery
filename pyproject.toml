@@ -1,0 +1,8 @@
+[project]
+name = "tinydb-crash-recovery"
+version = "0.0.0"
+description = "Opt-in crash-recovery journal mode for TinyDB (scaffold, no behaviour yet)."
+requires-python = ">=3.12"
+# Runtime stays on the standard library plus the pinned upstream TinyDB source
+# staged under third_party/ (ticket #10). Never add a runtime dependency.
+dependencies = []
