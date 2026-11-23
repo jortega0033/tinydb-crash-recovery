@@ -27,20 +27,18 @@ jobs:
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: ${{ matrix.python-version }}
-      # The three `if:` guards below exist only because the repository has no tests yet.
-      # They are removed after ticket #2 merges, as a direct tooling change by the
+      # The two `if:` guards below remain only until ticket #10 stages requirements-dev.txt
+      # and third_party/tinydb/. They are removed afterwards, as a direct tooling change by the
       # orchestrator or the owner, never inside a ticket (tickets do not edit CI).
-      # After that the steps run unconditionally and fail when no test is found.
       - name: Install dev requirements
-        # requirements-dev.txt (pinned runner for the upstream suite) is added by ticket #2.
+        # requirements-dev.txt (pinned runner for the upstream suite) is added by ticket #10.
         if: ${{ hashFiles('requirements-dev.txt') != '' }}
         run: python -m pip install -r requirements-dev.txt
       - name: Unit tests
-        # The first tests are added by ticket #2. Linux-only tests skip on Windows (decision D7).
-        if: ${{ hashFiles('tests/**/*.py') != '' }}
-        run: python -m unittest discover -s tests -t .
+        # Linux-only tests skip on Windows (decision D7).
+        run: python -m unittest discover -s tests -t . -v
       - name: Upstream TinyDB suite
-        # third_party/tinydb/ is staged by ticket #2.
+        # third_party/tinydb/ is staged by ticket #10.
         if: ${{ hashFiles('third_party/tinydb/tests/**/*.py') != '' }}
         run: python -m pytest third_party/tinydb/tests
       - name: Review gate self-test
