@@ -22,7 +22,7 @@ TinyDB Crash Recovery is an opt-in journal mode for TinyDB: multi-document batch
 
 ## Module boundaries
 
-The scaffold created these modules as docstring-only stubs (`tinydb_journal/errors.py`, `lock.py`, `store.py`, `log.py`, `recovery.py`, `checkpoint.py`, `legacy_import.py`, `index.py`, `scenario.py`, `_upstream.py`, `cli.py`, `harness/`, `report/`); ticket [#2](https://github.com/jortega0033/tinydb-crash-recovery/issues/2) freezes the layout and updates this section. All behaviour comes from [docs/TECHNICAL_SPEC.md](docs/TECHNICAL_SPEC.md).
+The scaffold created these modules as docstring-only stubs (`tinydb_journal/errors.py`, `lock.py`, `store.py`, `log.py`, `recovery.py`, `checkpoint.py`, `importer.py`, `index.py`, `scenario.py`, `_upstream.py`, `__main__.py` (CLI), `harness/`, `report/`); ticket [#2](https://github.com/jortega0033/tinydb-crash-recovery/issues/2) freezes the layout and updates this section. All behaviour comes from [docs/TECHNICAL_SPEC.md](docs/TECHNICAL_SPEC.md).
 
 | Planned path | Responsibility |
 |---|---|
@@ -49,10 +49,10 @@ Local Python is `python` (3.13 on the owner's PC; `python3` on Linux). The fault
 | CLI help and version | `python -m tinydb_journal --help`, `--version`, `python -m tinydb_journal.harness --help` | real |
 | Upstream suite | `python -m pytest third_party/tinydb/tests` | planned: introduced by ticket #10 (pytest, dev-only, pinned in `requirements-dev.txt`; decision D1 in `docs/owner-decisions.md`) |
 | Demo scenario | `python -m tinydb_journal scenario run <directory>`, then `scenario show <directory>` | planned: introduced by ticket #13 (exits non-zero today) |
-| Legacy import | `python -m tinydb_journal import <legacy.json> <new-directory>` | planned: introduced by ticket #5 |
-| Fault harness | `python -m tinydb_journal.harness run --seed <n> --out <directory>` | planned: introduced by ticket #6 |
-| Report | `python -m tinydb_journal report trials <trials-directory>` | planned: introduced by ticket #7 |
-| Journal report | `python -m tinydb_journal report journal <directory> [--generation N]` (takes the directory lock, reads, releases; busy error while another process owns it) | planned: introduced by ticket #7 |
+| Legacy import | `python -m tinydb_journal import <legacy.json> <new-directory>` | planned: introduced by ticket #23 |
+| Fault harness | `python -m tinydb_journal.harness run --seed <n> --out <directory>` | planned: introduced by ticket #26 |
+| Report | `python -m tinydb_journal report trials <trials-directory>` | planned: introduced by ticket #27 |
+| Journal report | `python -m tinydb_journal report journal <directory> [--generation N]` (takes the directory lock, reads, releases; busy error while another process owns it) | planned: introduced by ticket #28 |
 
 The ticket that introduces a command makes it real and replaces "planned" here in the same pull request.
 

@@ -11,7 +11,7 @@ def main(argv: list[str] | None = None) -> int:
     run.add_argument("--seed", type=int, required=True)
     run.add_argument("--out", required=True)
     parser.parse_args(argv)
-    print("not implemented yet: see #24", file=sys.stderr)
+    print("not implemented yet: see #26", file=sys.stderr)
     return 2
 
 

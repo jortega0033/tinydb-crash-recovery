@@ -8,8 +8,8 @@ import unittest
 MODULES = [
     "tinydb_journal", "tinydb_journal._upstream", "tinydb_journal.errors", "tinydb_journal.lock",
     "tinydb_journal.store", "tinydb_journal.log", "tinydb_journal.recovery",
-    "tinydb_journal.checkpoint", "tinydb_journal.legacy_import", "tinydb_journal.index",
-    "tinydb_journal.scenario", "tinydb_journal.cli", "tinydb_journal.harness",
+    "tinydb_journal.checkpoint", "tinydb_journal.importer", "tinydb_journal.index",
+    "tinydb_journal.scenario", "tinydb_journal.harness",
     "tinydb_journal.report",
 ]
 
@@ -39,7 +39,7 @@ class Smoke(unittest.TestCase):
         self.assertEqual(run("tinydb_journal.harness", "--help").returncode, 0)
         result = run("tinydb_journal.harness", "run", "--seed", "1", "--out", "x")
         self.assertNotEqual(result.returncode, 0)
-        self.assertIn("see #24", result.stderr)
+        self.assertIn("see #26", result.stderr)
 
 
 if __name__ == "__main__":
