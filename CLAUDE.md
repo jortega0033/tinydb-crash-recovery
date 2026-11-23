@@ -2,7 +2,7 @@
 
 TinyDB Crash Recovery is an opt-in journal mode for TinyDB: multi-document batches that survive a process stop, with checkpoint rotation, an explicit legacy import, an equality index and a subprocess fault harness. A developer demonstrates it with one scenario: move counts between two bins, record a movement row in a second table, interrupt the writer, reopen in a fresh process and read back the same complete state.
 
-**Status: planning only.** The repository holds the product plan, the technical specification and the backlog. There is no application code and no test yet. CI is installed and runs the review gate self-test now; its test steps are guarded and the guards are removed by the owner or orchestrator, not by a ticket, after ticket [#2](https://github.com/jortega0033/tinydb-crash-recovery/issues/2) has merged. Every command below is planned and does not run until the named ticket lands. Do not claim a check passed that was never run.
+**Status: scaffold only.** The repository holds the product plan, the technical specification, the backlog and an empty skeleton: `pyproject.toml`, the `tinydb_journal/` modules (docstring only, no behaviour), a CLI whose commands exit non-zero with "not implemented yet: see #N", and a smoke test. The own test step in CI runs. The upstream TinyDB source is not staged yet (ticket [#10](https://github.com/jortega0033/tinydb-crash-recovery/issues/10)), so the setup and upstream-suite steps stay guarded until it lands; the owner or orchestrator removes those guards, not a ticket. A command marked planned does not run until the named ticket lands. Do not claim a check passed that was never run.
 
 ## Source of truth
 
@@ -20,9 +20,9 @@ TinyDB Crash Recovery is an opt-in journal mode for TinyDB: multi-document batch
 - Deterministic: explicit positive integer document IDs, repeatable recovery, seeded trials.
 - Budgets: 1 MiB frame cap, 100 operations per batch, a documented receipt cap. Test bounds are measured on the host and recorded, not assumed.
 
-## Planned module boundaries
+## Module boundaries
 
-Names are the planned defaults; ticket [#2](https://github.com/jortega0033/tinydb-crash-recovery/issues/2) freezes the layout and updates this section. All behaviour comes from [docs/TECHNICAL_SPEC.md](docs/TECHNICAL_SPEC.md).
+The scaffold created these modules as docstring-only stubs (`tinydb_journal/errors.py`, `lock.py`, `store.py`, `log.py`, `recovery.py`, `checkpoint.py`, `legacy_import.py`, `index.py`, `scenario.py`, `_upstream.py`, `cli.py`, `harness/`, `report/`); ticket [#2](https://github.com/jortega0033/tinydb-crash-recovery/issues/2) freezes the layout and updates this section. All behaviour comes from [docs/TECHNICAL_SPEC.md](docs/TECHNICAL_SPEC.md).
 
 | Planned path | Responsibility |
 |---|---|
@@ -44,10 +44,11 @@ Local Python is `python` (3.13 on the owner's PC; `python3` on Linux). The fault
 
 | Purpose | Command | Status |
 |---|---|---|
-| Setup | `python -m venv .venv`, then install the pinned dev requirement file | planned: introduced by ticket #2 (only for the upstream suite runner) |
-| Own tests | `python -m unittest discover -s tests -t .` | planned: introduced by ticket #2 |
-| Upstream suite | `python -m pytest third_party/tinydb/tests` | planned: introduced by ticket #2 (pytest, dev-only, pinned in `requirements-dev.txt`; decision D1 in `docs/owner-decisions.md`) |
-| Demo scenario | `python -m tinydb_journal scenario run <directory>`, then `scenario show <directory>` | planned: introduced by ticket #2 |
+| Setup | `python -m venv .venv`, then install the pinned dev requirement file | planned: introduced by ticket #10 (only for the upstream suite runner) |
+| Own tests | `python -m unittest discover -s tests -t .` | real (smoke tests only until #10 and later tickets) |
+| CLI help and version | `python -m tinydb_journal --help`, `--version`, `python -m tinydb_journal.harness --help` | real |
+| Upstream suite | `python -m pytest third_party/tinydb/tests` | planned: introduced by ticket #10 (pytest, dev-only, pinned in `requirements-dev.txt`; decision D1 in `docs/owner-decisions.md`) |
+| Demo scenario | `python -m tinydb_journal scenario run <directory>`, then `scenario show <directory>` | planned: introduced by ticket #13 (exits non-zero today) |
 | Legacy import | `python -m tinydb_journal import <legacy.json> <new-directory>` | planned: introduced by ticket #5 |
 | Fault harness | `python -m tinydb_journal.harness run --seed <n> --out <directory>` | planned: introduced by ticket #6 |
 | Report | `python -m tinydb_journal report trials <trials-directory>` | planned: introduced by ticket #7 |
@@ -97,7 +98,7 @@ Each role's `description` ends with a "Use proactively ..." sentence, which is w
 - **Driver and playbook.** The owner starts a ticket with `/next-ticket` ([`.claude/skills/next-ticket/SKILL.md`](.claude/skills/next-ticket/SKILL.md)); it runs the playbook [`.claude/skills/implement-ticket/SKILL.md`](.claude/skills/implement-ticket/SKILL.md). Starting it is the go signal; there is no scheduler. Agents take a ticket up to a ready pull request and never merge or release. A ticket with open sub-issues or the label `tracking` is a container and is never picked.
 - **Review gate hook.** [`.claude/hooks/role_gate.py`](.claude/hooks/role_gate.py), wired in [`.claude/settings.json`](.claude/settings.json), blocks `gh pr create` and `gh pr ready` until Code Reviewer and Reality Checker have run after the last code edit; documentation-only changes pass. `ROLE_GATE=off` in the environment Claude Code is started from switches it off for that session.
 - **Permissions.** `.claude/settings.json` allows the documented commands and git and gh read operations, asks before edits to CI, agent configuration, skills, hooks and Loop files, and denies force pushes, pushes to `main`, `gh pr merge`, releases and reads of `.env`.
-- **CI.** [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs the own tests, the upstream suite and then the gate self-test on Linux and Windows with Python 3.12 and 3.13; the test steps are guarded until ticket #2 has merged, and the owner or orchestrator removes the guards afterwards (a ticket never edits CI). Every job must be green before a pull request is marked ready.
+- **CI.** [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs the own tests, the upstream suite and then the gate self-test on Linux and Windows with Python 3.12 and 3.13; the own-tests step runs unconditionally; the setup and upstream-suite steps stay guarded until ticket #10 stages `requirements-dev.txt` and `third_party/tinydb/`, and the owner or orchestrator removes those guards afterwards (a ticket never edits CI). Every job must be green before a pull request is marked ready.
 - **Pull request.** Use [`.github/pull_request_template.md`](.github/pull_request_template.md). Add a line to [`CHANGELOG.md`](CHANGELOG.md) under `Unreleased` in every ticket pull request.
 - **Labels.** `status:ready`, `status:blocked`, `status:in-progress`, `needs-decision`, `tracking`.
 - **UI and copy.** [`docs/ui-quality.md`](docs/ui-quality.md) holds the ten binding rules for any screen and for user-facing text; the product has a CLI only today. A ticket that adds a screen starts with the `ui-ux-pro-max` skill and ends with a check against that file. User-facing copy, documentation and pull request text go through the `unslop` skill before the pull request is opened.

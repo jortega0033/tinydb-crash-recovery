@@ -1,6 +1,6 @@
 # TinyDB Crash Recovery
 
-A planned offline project. Implementation has not started. The repository currently contains the product plan, technical specification and implementation backlog.
+A planned offline project. Product implementation has not started. The repository contains the product plan, technical specification, implementation backlog and an empty scaffold (`pyproject.toml`, `tinydb_journal/` stubs, smoke test).
 
 ## Plan
 
@@ -10,7 +10,7 @@ A planned offline project. Implementation has not started. The repository curren
 
 ## Current status
 
-The fixtures describe expected results for future checks. No working baseline or passing implementation tests are claimed. Required runtime versions and offline dependencies must be checked before the first build.
+The fixtures describe expected results for future checks. No working baseline or passing implementation tests are claimed; the smoke test only checks imports and CLI help. Required runtime versions and offline dependencies must be checked before the first build.
 
 ## Licensing
 
