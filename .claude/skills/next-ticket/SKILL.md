@@ -13,7 +13,7 @@ One ticket per run. Never merge. Never start another run.
 
 ## Steps
 
-1. **Refresh the queue.** `gh issue list --label status:blocked --state open` and read epic #1. A `status:blocked` ticket whose blockers are all closed becomes `status:ready` (`gh issue edit <n> --add-label status:ready --remove-label status:blocked`). A parent whose sub-issues are all closed is closed with a comment.
+1. **Refresh the queue.** `gh issue list --label status:blocked --state open` and read epic #1. A `status:blocked` ticket whose blockers are all closed becomes `status:ready` (`gh issue edit <n> --add-label status:ready --remove-label status:blocked`). A parent whose sub-issues are all closed is closed with a comment. A ticket with no sub-issues is never closed by this step.
 2. **Pick the ticket.** Work is a leaf ticket: one labelled neither `tracking` nor having open sub-issues. With an argument, use that issue (stop and say so if it is closed, `status:in-progress`, `needs-decision` or still blocked; if it is a `tracking` parent, refuse and list its open sub-issues). Without one, take the first `status:ready` leaf ticket in the epic's dependency order (the order of the table in the epic body, then the order of sub-issues inside a parent) that is neither `status:in-progress` nor `needs-decision`. If none qualifies, report the queue and stop.
 3. **Claim it.** Add the label `status:in-progress` and remove `status:ready`.
 4. **Branch in a fresh worktree.** `git fetch origin`, then `git worktree add ../tinydb-crash-recovery-<issue-number> -b ticket-<issue-number>-<short-slug> origin/main`. Work only there.
