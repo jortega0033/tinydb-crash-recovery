@@ -1,5 +1,7 @@
 # TinyDB Crash Recovery
 
+> This document specifies phase 1 of the program in [#30](https://github.com/jortega0033/tinydb-crash-recovery/issues/30). Hour figures in it are early estimates for that phase; its open tickets add up to 55 to 80 hours (2026-11-24). Work that it defers is planned in the later phases only where the program names it.
+
 Engineering plan for an opt-in extension to TinyDB. Six future tickets total **19–30 engineering hours**. The prototype, fault harness, and measurements are planned.
 
 ## Product requirements
