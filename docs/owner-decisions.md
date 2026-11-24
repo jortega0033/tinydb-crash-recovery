@@ -35,3 +35,13 @@ Entry 11 (Rust verified in CI only) does not apply: this repository has no Rust.
 | D9 | Scan timings | Not measured in this batch; recorded as future work | #7 |
 
 The equality index ticket (plan ID E89-7) is issue #8.
+
+## Program decisions (owner, 2026-11-24)
+
+The owner accepted the goal and each suggestion below. They apply from the phase they name; the rules of `CLAUDE.md` hold for phase 1 as written.
+
+| Decision | Implemented in |
+|---|---|
+| The repository has a program goal above phase 1: a crash-safe embedded document database, in six phases. | Program issue #30 |
+| The plan is a TinyDB extension. Suggested: keep the TinyDB API as the top layer and build the engine below it. | Program issue #30 |
+| Replication leaves the local-only rule. Suggested: simulated network and loopback only. | Program issue #30 |
